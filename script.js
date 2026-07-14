@@ -1,7 +1,8 @@
+let cookieCount = 0;
+
 
 function addCookie() {
     const add = document.getElementById("compteur");
-    let cookieCount = parseInt(add.textContent);
     cookieCount = cookieCount + 1;
     add.textContent = cookieCount;
     saveGame(cookieCount);
@@ -15,8 +16,13 @@ function loadGame() {
     const add = document.getElementById("compteur");
     const save = localStorage.getItem("cookies");
     if (save !== null) {
+        cookieCount = parseInt(save)
         add.textContent = save;
     }
+}
+
+
+function autoClick(){
 
 }
 
