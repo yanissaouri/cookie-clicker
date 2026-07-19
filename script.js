@@ -34,15 +34,18 @@ function autoClickShop(){
     const upgradeLevelDisplay = document.getElementById("autoClickUpgradeLevelDisplay");
     upgradeLevelDisplay.textContent = autoClickUpgradeLevel;
 
-    // cookieCount = cookieCount + 1;
-
     if (cookieCount >= autoClickPrice ){
-
         cookieCount = cookieCount - autoClickPrice;
-        autoClickPrice = autoClickPrice * multiplier;
+        autoClickPrice = Math.floor(autoClickPrice * multiplier);
         autoClickUpgradeLevel = autoClickUpgradeLevel + 1 ;
     }
 }
+
+function autoClick(){
+    cookieCount = cookieCount + autoClickUpgradeLevel;
+}
+setInterval(autoClick, 1000);
+
 
 document.getElementById("clickMe").addEventListener("click", addCookie);
 
