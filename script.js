@@ -3,52 +3,68 @@ let multiplier = 1.5;
 let autoClickPrice = 25;
 let autoClickUpgradeLevel = 0;
 
+const count = document.getElementById("count");
+const autoClickPriceDisplay = document.getElementById("autoClickPriceDisplay");
+const upgradeLevelDisplay = document.getElementById("autoClickUpgradeLevelDisplay");
 
 function addCookie() {
-    const count = document.getElementById("count");
     cookieCount = cookieCount + 1;
     count.textContent = cookieCount;
-    saveGame(cookieCount);
+    saveCookie(cookieCount);
 }
 
 // ajouter les upgrades 
-function saveGame(cookieCount) {
+function saveCookie(cookieCount) {
     localStorage.setItem("cookies", cookieCount) ;
-    localStorage.setItem("autoClickPriceDisplay", autoClickPrice) ;
+}
+
+function saveAutoClickUpgrade(autoClickPrice, autoClickUpgradeLevel){
+    localStorage.setItem("autoClickPrice", autoClickPrice);
+    localStorage.setItem("autoClickUpgradeLevel", autoClickUpgradeLevel);
 }
 
 function loadGame() {
-    const count = document.getElementById("count");
-    const save = localStorage.getItem("cookies");
-    if (save !== null) {
-        cookieCount = parseInt(save)
-        count.textContent = save;
+    const saveCookies = localStorage.getItem("cookies");
+    if (saveCookies !== null) {
+        cookieCount = parseInt(saveCookies);
+        count.textContent = saveCookies;
+    }
+
+    const saveAutoClickPrice = localStorage.getItem("autoClickPrice");
+    if (saveAutoClickPrice !== null){
+        autoClickPrice = parseInt(saveAutoClickPrice);
+        autoClickPriceDisplay.textContent = saveAutoClickPrice;
+    }
+
+    const saveAutoClickUpgradeLevel = localStorage.getItem("autoClickUpgradeLevel");
+    if (saveAutoClickUpgradeLevel !== null){
+        autoClickUpgradeLevel = parseInt(saveAutoClickUpgradeLevel);
+        upgradeLevelDisplay.textContent = saveAutoClickUpgradeLevel;
     }
 }
 
-// changer la variable pour faire comprendre que c'est que pour le shop et en creer une autre pour la logique du cookie + x
 function autoClickShop(){
-    const autoClickPriceDisplay = document.getElementById("autoClickPriceDisplay");
-    autoClickPriceDisplay.textContent = autoClickPrice;
-
-    const upgradeLevelDisplay = document.getElementById("autoClickUpgradeLevelDisplay");
-    upgradeLevelDisplay.textContent = autoClickUpgradeLevel;
-
     if (cookieCount >= autoClickPrice ){
         cookieCount = cookieCount - autoClickPrice;
         autoClickPrice = Math.floor(autoClickPrice * multiplier);
         autoClickUpgradeLevel = autoClickUpgradeLevel + 1 ;
     }
+    autoClickPriceDisplay.textContent = autoClickPrice;
+    upgradeLevelDisplay.textContent = autoClickUpgradeLevel;
+
+    saveAutoClickUpgrade(autoClickPrice, autoClickUpgradeLevel);
+
 }
 
 function autoClick(){
     cookieCount = cookieCount + autoClickUpgradeLevel;
+    count.textContent = cookieCount;
+    saveCookie(cookieCount);
 }
 setInterval(autoClick, 1000);
 
 
 document.getElementById("clickMe").addEventListener("click", addCookie);
 
-// a mettre en haut pour qu'il se charge en premier? pour pas que le html s'affiche avant
 document.getElementById("autoClickPriceDisplay").addEventListener("click", autoClickShop);
 loadGame();
