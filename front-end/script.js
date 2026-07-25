@@ -1,6 +1,7 @@
 let cookieCount = 0;
-let clickValue = 1; // jsp comment l'appeler (variable qui sert a augmenter le cookie +1 )
-let priceMultiplier = 1.2;
+let cookieMax = 0;
+let clickValue = 1; 
+let priceMultiplier = 1.5;
 let clickMultiplier = 2;
 let autoClickPrice = 25;
 let clickMultiplierPrice = 50;
@@ -10,18 +11,25 @@ let autoClickUpgradeLevel = 0;
 const count = document.getElementById("count");
 const autoClickPriceDisplay = document.getElementById("autoClickPriceDisplay");
 const autoClickUpgradeLevelDisplay = document.getElementById("autoClickUpgradeLevelDisplay");
-const clickMultiplierPriceDisplay = document.getElementById("clickMultiplierPriceDisplay")
-const clickMultiplierLevelDisplay = document.getElementById("clickMultiplierLevelDisplay")
+const clickMultiplierPriceDisplay = document.getElementById("clickMultiplierPriceDisplay");
+const clickMultiplierLevelDisplay = document.getElementById("clickMultiplierLevelDisplay");
+const resetAll = document.getElementById("reset");
 
 function addCookie() {
     cookieCount = cookieCount + clickValue;
+    cookieMax = cookieMax + clickValue ;
     count.textContent = cookieCount;
     saveCookie(cookieCount);
+    saveMaxCookie(cookieMax);
 }
 
 // ajouter les upgrades 
 function saveCookie(cookieCount) {
     localStorage.setItem("cookies", cookieCount) ;
+}
+
+function saveMaxCookie(cookieMax){
+    localStorage.setItem("maxCookies", cookieMax);
 }
 
 function saveAutoClickUpgrade(autoClickPrice, autoClickUpgradeLevel){
@@ -39,6 +47,11 @@ function loadGame() {
     if (saveCookies !== null) {
         cookieCount = parseInt(saveCookies);
         count.textContent = saveCookies;
+    }
+
+    const saveMaxCookies = localStorage.getItem("maxCookies");
+    if (saveMaxCookies !== null) {
+        cookieMax = parseInt(saveMaxCookies);
     }
 
     const saveAutoClickPrice = localStorage.getItem("autoClickPrice");
@@ -80,8 +93,10 @@ function autoClickShop(){
 
 function autoClick(){
     cookieCount = cookieCount + autoClickUpgradeLevel;
+    cookieMax = cookieMax + autoClickUpgradeLevel
     count.textContent = cookieCount;
     saveCookie(cookieCount);
+    saveMaxCookie(cookieMax);
 }
 setInterval(autoClick, 1000);
 
@@ -98,9 +113,29 @@ function clickMultiplierShop(){
     saveClickMultiplierUpgrade(clickMultiplierPrice, clickMultiplierUpgradeLevel);
 }
 
+function resetGame(){
+    localStorage.clear();
+    cookieCount = 0;
+    cookieMax = 0;
+    clickValue = 1; 
+    priceMultiplier = 1.5;
+    clickMultiplier = 2;
+    autoClickPrice = 25;
+    clickMultiplierPrice = 50;
+    clickMultiplierUpgradeLevel = 0;
+    autoClickUpgradeLevel = 0;
+
+    autoClickPriceDisplay.textContent = autoClickPrice;
+    autoClickUpgradeLevelDisplay.textContent = autoClickUpgradeLevel;
+
+    clickMultiplierPriceDisplay.textContent = clickMultiplierPrice;
+    clickMultiplierLevelDisplay.textContent = clickMultiplierUpgradeLevel
+}
+
 
 document.getElementById("clickMe").addEventListener("click", addCookie);
 
 document.getElementById("autoClickPriceDisplay").addEventListener("click", autoClickShop);
 document.getElementById("clickMultiplierPriceDisplay").addEventListener("click", clickMultiplierShop);
+document.getElementById("reset").addEventListener("click", resetGame);
 loadGame();
