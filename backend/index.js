@@ -1,3 +1,5 @@
+// note to self: "node index.js" pour lancer l'app
+
 const express = require("express");
 const app = express() ;
 const db = require("./data-base/db")
@@ -21,4 +23,3 @@ app.post("/score", (req, res) => {
 app.listen(3000, () => {
     console.log("hello")
 });
-
